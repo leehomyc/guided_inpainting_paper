@@ -1,15 +1,15 @@
-%!TEX root = guided_inpainting_paper.\section{Our Method}
+%!TEX root = guided_inpainting_paper.tex
 \section{Our Method}
 
-In this section, we describe our model and several training schemes. First, we illustrate the details of our basic components: the Generator head and the training losses in Sec.~\ref{sec:resnet_head}. Then, we characterize our block-wise procedural training scheme together with the adversarial loss weight annealing in Sec. ?. Finally, we present our implementation and training details ?. 
+In this section, we describe our model and several training schemes. First, we illustrate the details of our basic components: the Generator head and the training losses in Sec.~\ref{sec:resnet_head}. Then, we characterize our block-wise procedural training scheme together with the adversarial loss weight annealing in Sec.~\ref{sec:procedural}. Finally, we summarize our implementation and training details. 
 
 \subsection{The Generator Head}
 \label{sec:resnet_head}
 
 Our generator head is a conditional GAN network~\cite{mirza2014conditional}, which takes an incomplete image as the input, and outputs a complete image. Conditional GANs for image inpainting usually consist of a generator $G$ and a discriminator $D$. The generator $G$ learns to predict the hole contents and restore the complete image, while the discriminator $D$ learns to distinguish real images from the generated ones. The model is trained in a self-supervised manner via the following minimax game:
-\[
+\begin{eqnarray}
 \min\limits_G \max\limits_D E_{(s,x)}[\log D(s,x)] + E_s[\log (1-D(s,G(s)))],
-\]
+\end{eqnarray}
 where $s$ and $x$ are the incomplete image and the original image respectively, and $G(s)$ is the generator prediction given the input $s$. Note that if $G(s)$ predicts an entire image as output, we only keep the hole contents and concatenate with the known context of $s$.
 
 Previous research experimented with different architecture of $G$, most notably the U-Net style generator of~\cite{pathak2016context} and the FCN style generator of~\cite{iizuka2017globally}. ~\cite{iizuka2017globally} shows that FCN style inpainting network produces less blurred results than U-Net, mainly because instead of using the fully connected layer as a bottleneck, it only uses fully convolutional layers which avoids significant resolution reduction or information loss.
@@ -21,7 +21,7 @@ More specifically, the down-sampling front-end consists of three convolutional l
 The detailed architecture of our generator head is illustrated in Fig..
 
 \subsection{The Training Losses}
-Traditional approaches for inpainting has used the reconstruction loss, the adversarial loss, and the global local GAN loss. The reconstruction loss can be $l2$ or $l1$, which forces the prediction to be consistent with the original image, and the adversarial loss makes the results looks more realistic. Unlike previous works, we proposed the Patch Perceptual loss for reconstruction, and the improved multi-scale discriminator as discriminator loss. Table shows the different training losses used by different previous approaches.
+Different losses have been used to train an inpainting network. These losses can be cast into two categories. The first category, which we refer to as \textit{similarity loss}, is used to measure the similarity between the output and the original image. The second category, which we refer to as the \textit{realism loss}, is used to measure how realistic-looking the output image is. We summarize the losses used in different approaches in Table~\ref{table:losses}. 
 
 \begin{table}[h!]
 \begin{center}
@@ -30,33 +30,44 @@ Traditional approaches for inpainting has used the reconstruction loss, the adve
 {\tiny
   \begin{tabular}{ l  c  c }
     \hline
-    \textbf{Method} & \textbf{Reconstruction Loss} &  \textbf{Realism Loss} \\ \hline
-    \emph{Context Encoder~\cite{pathak2016context}} & L2 \% & Global Adversarial\\ \hline
-    \emph{Global local} & L2 & Global adversarial loss and local adversarial loss \\ \hline
-    \emph{Our Approach} & PPL\% & improved multi-scale discriminator loss \\ \hline
+    \textbf{Method} & \textbf{Similarity Loss} &  \textbf{Realism Loss} \\ \hline
+    \emph{Context Encoder~\cite{pathak2016context}} & $\ell_2$ & Global Adversarial Loss\\ \hline
+    \emph{Global Local GAN~\cite{iizuka2017globally}} & $\ell_2$ & Global and Local Adversarial Loss \\ \hline
+    \emph{Our Approach} & Patch Perceptual Loss (PPL) & Improved Multi-Scale Adversarial Loss \\ \hline
     \hline
   \end{tabular}}
   }
   \end{center}
-  \caption{Numerical comparison on 200 test images of ImageNet.}
+  \caption{Comparison of training losses in different methods.}
   \vspace{-10pt}
-  \label{table:numerical}
+  \label{table:losses}
 \end{table}
 
-\noindent\textbf{Patch Perceptual Loss} The problem with L2 loss. Perceptual losses has been used in style transfer and image synthesis. The perceptual loss, uses a fixed and pretrained network to compute the feature of two images, and compute the distance of the features as the metric. Recently, [] gives thorough analysis and show that a new perceptual metric is more similar to human perception to measure the difference of two images, than L2, L1, SSIM, or PSNR. In particular, perceptual loss, will avoid gice blurry, or noisy patterns which penalize a lot. We propose to use the similar ways to compute perceptual metric and use it as a perceptual loss for training. To compute distance between two patches, given a network F, we first compute deep embeddings, normalize the activations in the channel dimension, scale each channel by vector w, and take the l2 distance. We then average across spatial dimension and across all layers. Furthermore, to ensure not just the hole contents are similar, we want to ensure the boundary and the connecting parts also look similar to. Hence we compute PPL at two scales, one just containing the hole, the other zoom in and overlaps a bit with the original image. We use AlexNet as the de facto network to measure the metric.
+\noindent\textbf{Patch Perceptual Loss} As shown in Table~\ref{table:losses}, using $\ell_2$ loss for reconstruction and measure the disparity between the output and the original image has been a default choice of previous inpainting methods. However, it is known that $\ell_2$ loss does not correspond well to human perception of visual similarity~\cite{zhang2018unreasonable}. This is because $\ell_2$ losses wrongly assumes each output pixel is conditionally independent of all others. A well-known issue, for example, is that blurring an image leads to small changes in terms of Euclidean distance but causes significant perceptual difference. Recent research suggests that a better metric for perceptual similarity is the internal activations of deep convolutional networks, usually trained on a high-level image classification task. Such loss is called ``perceptual loss'', and is used in various tasks such as neural style transfer~\cite{gatys2016image}, image super-resolution~\cite{johnson2016perceptual}, and conditional image synthesis~\cite{dosovitskiy2016generating,chen2017photographic}.
 
-\noindent\textbf{Improved Multi-scale discriminator Loss} Discerning whether an image is real or has been completed. High-resolution image synthesis poses a great challenge to the GAN discriminator design. To differentiate high-resolution real and synthesized images, the discriminator needs to have a large receptive field. This would reuquire either a deeper network or larger convolutional kernels. As both choices lead to an incraeased network capacity, overfitting would become more of a concern. [] Proposes to use multiple GAN discriminators at different image scales, which either has a more global view which makes the image more globally consistent, or has a local GAN produce finer details. In addition, we use a convolutional "PatchGAN" classifier, which only penalizes strcture at the scale of image patches, it is better to capture better local style statistics. Which is also proposed in. However, directly using PatchGAN is probablematic in our setting, as even for a fake image, the patches outside the hole are from the original images, which should be real. Only the patches overlap with the hole should considered as fake. Therefore, when compute the losses, we do not output a single dimensional vector of True or False, we need to be more delicate and give different labels to different patches. This is why we call it improved multi-scale discriminator loss. In summary, we reformulate the patchGAN as.
-\[
-\min\max L_{GAN}(G,D)
-\]
-Comparing with Global GAN, our improved multiscale discriminator cares about the local style statistics, and makes local patches look more realistic. Comparing with local GAN, which takes the local patch around the hole as input to the local discriminator, our loss is more flexible as it is able to handle holes of different shape, location and sizes. Our multiscale also gives better results at different scales, and is critical in obtaining semantically and locally coherent image completion results.
+Based on this observation, we propose a new ``patch perceptual loss'' as the substitute of the $\ell_2$ losses. Traditional perceptual loss typically uses VGG-Net, and computes the $\ell_2$ distance of the activations on a few feature layers. Recently,~\cite{zhang2016stackgan} specifically trained a patch perceptual network to measure the perceptual differences between two image patches based on AlexNet, making it an ideal candidate for our task. The patch perceptual network computes the activations across all feature layers and sums up the $\ell_2$ distances scaled by learned weights at each layer. Furthermore, to take into account both the local view and the global view of perceptual similarity, we compute PPL at two scales. Local PPL considers the local hole patch, while the global PPL slightly zooms out to cover a larger contextual area. More formally, our PPL is defined as:
+\begin{eqnarray}
+\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p) = \sum\limits_{k=1,2}\sum\limits_l\frac{1}{H_lW_l}\sum\limits_{h,w}\parallel w_l^T\odot(\hat{F}(x_p)^l_{hw}-\hat{F}(G(s))^k_{hw})\parallel^2_2.
+\end{eqnarray}
 
-Our full objective combines both losses as:
+Here $k$ refers to the patch scale. $p$ is the patch covering the hole. $\hat{F}$ is the AlexNet and $l$ is the feature layer. Sec.~\ref{sec:results} shows that PPL gives better inpainting quality than both $\ell_2$ and VGG-based perceptual losses. 
 
-where $\lambda$ controls the importance of the two terms.
+\noindent\textbf{Multi-Scale Patch-wise Adversarial Loss} Adversarial losses are given by trained discriminators to discern whether an image is real or fake. The global adversarial loss of~\cite{pathak2016context} takes the entire image as input and outputs a single real/fake prediction, which does not consider the realism of local patches, especially the holes. The additional local adversarial loss of~\cite{iizuka2017globally} adds another discriminator specifically for the hole, but it requires the hole to be fixed shape and size during training to fit the discriminator. To consider both the global view and the local view, we propose to use discriminators at three scales of image resolutions. The discriminator at each scale is identical, only the input is a scaled version of the \textit{entire image}. Furthermore, we use PatchGAN discriminator at each scale, which uses convolutional discriminator to output a vector of predictions, each value corresponds to an image patch. In this way, the discriminators are trained to classify global and local image patches across the image, which enables us to use random holes and shapes during training. However, directly using PatchGAN is problematic in our case, as for the output restored image, only the patches overlapping with the hole area should be considered fake patches. Therefore when computing the discriminator loss of the restored image, instead of forcing the entire output to be fake, only the patches overlapping with the holes are labeled as fake. More formally, our Patch-wise Adversarial Loss is defined as: 
+\begin{eqnarray}
+\min\limits_G\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k) = \sum\limits_{k=1,2,3}E_{(s,x)}[\log (s,x)] + E_s[\log (Q-D_k(s,G(s)))].
+\end{eqnarray}
+Here $Q$ is a patch-wise real/fake vector, based on whether the patch overlaps with the holes. Using multiple GAN discriminators at the same or different image scale has been proposed in unconditional GANs~\cite{durugkar2016generative} and conditional GANs~\cite{wang2017high}. Here we extend the design to take into account inpainting hole locations, which is critical in obtaining semantically and locally coherent image completion results.
+
+Our full objective combines both losses is therefore defined as:
+\begin{eqnarray}
+\min\limits_G((\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k))+\lambda\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p))
+\end{eqnarray}
+
+where $\lambda$ controls the importance of the two terms. We set $\lambda=10$ in our experiments.
 
 \subsection{Procedural Training with Adversarial Loss Annealing}
+\label{sec:procedural}
 
-\subsection{Multiple Output.}
+\noindent\textbf{Multiple Output.}
 
 Our algorithm can be summarized in Alg.
