@@ -1,3 +1,254 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+
+\bibitem{gatys2015texture}
+Gatys, L., Ecker, A.S., Bethge, M.:
+\newblock Texture synthesis using convolutional neural networks.
+\newblock In: Advances in Neural Information Processing Systems. (2015)
+  262--270
+
+\bibitem{komodakis2006image}
+Komodakis, N.:
+\newblock Image completion using global optimization.
+\newblock In: Computer Vision and Pattern Recognition, 2006 IEEE Computer
+  Society Conference on. Volume~1., IEEE (2006)  442--452
+
+\bibitem{hays2007scene}
+Hays, J., Efros, A.A.:
+\newblock Scene completion using millions of photographs.
+\newblock In: ACM Transactions on Graphics (TOG). Volume~26., ACM (2007) ~4
+
+\bibitem{bertalmio2000image}
+Bertalmio, M., Sapiro, G., Caselles, V., Ballester, C.:
+\newblock Image inpainting.
+\newblock In: Proceedings of the 27th annual conference on Computer graphics
+  and interactive techniques, ACM Press/Addison-Wesley Publishing Co. (2000)
+  417--424
+
+\bibitem{wexler2004space}
+Wexler, Y., Shechtman, E., Irani, M.:
+\newblock Space-time video completion.
+\newblock In: Computer Vision and Pattern Recognition, 2004. CVPR 2004.
+  Proceedings of the 2004 IEEE Computer Society Conference on. Volume~1., IEEE
+  (2004)  I--I
+
+\bibitem{barnes2009patchmatch}
+Barnes, C., Shechtman, E., Finkelstein, A., Goldman, D.B.:
+\newblock Patchmatch: A randomized correspondence algorithm for structural
+  image editing.
+\newblock ACM Transactions on Graphics-TOG \textbf{28}(3) (2009) ~24
+
+\bibitem{bertalmio2003simultaneous}
+Bertalmio, M., Vese, L., Sapiro, G., Osher, S.:
+\newblock Simultaneous structure and texture image inpainting.
+\newblock IEEE transactions on image processing \textbf{12}(8) (2003)  882--889
+
+\bibitem{wilczkowiak2005hole}
+Wilczkowiak, M., Brostow, G.J., Tordoff, B., Cipolla, R.:
+\newblock Hole filling through photomontage.
+\newblock In: BMVC 2005-Proceedings of the British Machine Vision Conference
+  2005. (2005)
+
+\bibitem{tsai2017deep}
+Tsai, Y.H., Shen, X., Lin, Z., Sunkavalli, K., Lu, X., Yang, M.H.:
+\newblock Deep image harmonization.
+\newblock In: IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR). (2017)
+
+\bibitem{pathak2016context}
+Pathak, D., Krahenbuhl, P., Donahue, J., Darrell, T., Efros, A.A.:
+\newblock Context encoders: Feature learning by inpainting.
+\newblock In: Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition. (2016)  2536--2544
+
+\bibitem{yeh2016semantic}
+Yeh, R., Chen, C., Lim, T.Y., Hasegawa-Johnson, M., Do, M.N.:
+\newblock Semantic image inpainting with perceptual and contextual losses.
+\newblock arXiv preprint arXiv:1607.07539 (2016)
+
+\bibitem{li2017generative}
+Li, Y., Liu, S., Yang, J., Yang, M.H.:
+\newblock Generative face completion.
+\newblock In: Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition. Volume~1. (2017) ~6
+
+\bibitem{yang2017high}
+Yang, C., Lu, X., Lin, Z., Shechtman, E., Wang, O., Li, H.:
+\newblock High-resolution image inpainting using multi-scale neural patch
+  synthesis.
+\newblock In: The IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR). Volume~1. (2017) ~3
+
+\bibitem{iizuka2017globally}
+Iizuka, S., Simo-Serra, E., Ishikawa, H.:
+\newblock Globally and locally consistent image completion.
+\newblock ACM Transactions on Graphics (TOG) \textbf{36}(4) (2017)  107
+
+\bibitem{zhang2018unreasonable}
+Zhang, R., Isola, P., Efros, A.A., Shechtman, E., Wang, O.:
+\newblock The unreasonable effectiveness of deep features as a perceptual
+  metric.
+\newblock arXiv preprint arXiv:1801.03924 (2018)
+
+\bibitem{johnson2016perceptual}
+Johnson, J., Alahi, A., Fei-Fei, L.:
+\newblock Perceptual losses for real-time style transfer and super-resolution.
+\newblock In: European Conference on Computer Vision, Springer (2016)  694--711
+
+\bibitem{gatys2016image}
+Gatys, L.A., Ecker, A.S., Bethge, M.:
+\newblock Image style transfer using convolutional neural networks.
+\newblock In: Computer Vision and Pattern Recognition (CVPR), 2016 IEEE
+  Conference on, IEEE (2016)  2414--2423
+
+\bibitem{dosovitskiy2016generating}
+Dosovitskiy, A., Brox, T.:
+\newblock Generating images with perceptual similarity metrics based on deep
+  networks.
+\newblock In: Advances in Neural Information Processing Systems. (2016)
+  658--666
+
+\bibitem{chen2017photographic}
+Chen, Q., Koltun, V.:
+\newblock Photographic image synthesis with cascaded refinement networks.
+\newblock In: The IEEE International Conference on Computer Vision (ICCV).
+  Volume~1. (2017)
+
+\bibitem{goodfellow2014generative}
+Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair,
+  S., Courville, A., Bengio, Y.:
+\newblock Generative adversarial nets.
+\newblock In: Advances in neural information processing systems. (2014)
+  2672--2680
+
+\bibitem{denton2015deep}
+Denton, E.L., Chintala, S., Fergus, R.,  et~al.:
+\newblock Deep generative image models using a￼ laplacian pyramid of
+  adversarial networks.
+\newblock In: Advances in neural information processing systems. (2015)
+  1486--1494
+
+\bibitem{radford2015unsupervised}
+Radford, A., Metz, L., Chintala, S.:
+\newblock Unsupervised representation learning with deep convolutional
+  generative adversarial networks.
+\newblock arXiv preprint arXiv:1511.06434 (2015)
+
+\bibitem{zhao2016energy}
+Zhao, J., Mathieu, M., LeCun, Y.:
+\newblock Energy-based generative adversarial network.
+\newblock arXiv preprint arXiv:1609.03126 (2016)
+
+\bibitem{arjovsky2017wasserstein}
+Arjovsky, M., Chintala, S., Bottou, L.:
+\newblock Wasserstein gan.
+\newblock arXiv preprint arXiv:1701.07875 (2017)
+
+\bibitem{gulrajani2017improved}
+Gulrajani, I., Ahmed, F., Arjovsky, M., Dumoulin, V., Courville, A.:
+\newblock Improved training of wasserstein gans.
+\newblock arXiv preprint arXiv:1704.00028 (2017)
+
+\bibitem{karras2017progressive}
+Karras, T., Aila, T., Laine, S., Lehtinen, J.:
+\newblock Progressive growing of gans for improved quality, stability, and
+  variation.
+\newblock arXiv preprint arXiv:1710.10196 (2017)
+
+\bibitem{kim2016accurate}
+Kim, J., Kwon~Lee, J., Mu~Lee, K.:
+\newblock Accurate image super-resolution using very deep convolutional
+  networks.
+\newblock In: Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition. (2016)  1646--1654
+
+\bibitem{dong2014learning}
+Dong, C., Loy, C.C., He, K., Tang, X.:
+\newblock Learning a deep convolutional network for image super-resolution.
+\newblock In: European Conference on Computer Vision, Springer (2014)  184--199
+
+\bibitem{ledig2016photo}
+Ledig, C., Theis, L., Husz{\'a}r, F., Caballero, J., Cunningham, A., Acosta,
+  A., Aitken, A., Tejani, A., Totz, J., Wang, Z.,  et~al.:
+\newblock Photo-realistic single image super-resolution using a generative
+  adversarial network.
+\newblock arXiv preprint arXiv:1609.04802 (2016)
+
+\bibitem{isola2016image}
+Isola, P., Zhu, J.Y., Zhou, T., Efros, A.A.:
+\newblock Image-to-image translation with conditional adversarial networks.
+\newblock arXiv preprint arXiv:1611.07004 (2016)
+
+\bibitem{zhu2017unpaired}
+Zhu, J.Y., Park, T., Isola, P., Efros, A.A.:
+\newblock Unpaired image-to-image translation using cycle-consistent
+  adversarial networks.
+\newblock arXiv preprint arXiv:1703.10593 (2017)
+
+\bibitem{wang2017high}
+Wang, T.C., Liu, M.Y., Zhu, J.Y., Tao, A., Kautz, J., Catanzaro, B.:
+\newblock High-resolution image synthesis and semantic manipulation with
+  conditional gans.
+\newblock arXiv preprint arXiv:1711.11585 (2017)
+
+\bibitem{zhu2015learning}
+Zhu, J.Y., Kr{\"a}henb{\"u}hl, P., Shechtman, E., Efros, A.A.:
+\newblock Learning a discriminative model for the perception of realism in
+  composite images.
+\newblock In: Computer Vision (ICCV), 2015 IEEE International Conference on.
+  (2015)
+
+\bibitem{elad2005simultaneous}
+Elad, M., Starck, J.L., Querre, P., Donoho, D.L.:
+\newblock Simultaneous cartoon and texture image inpainting using morphological
+  component analysis (mca).
+\newblock Applied and Computational Harmonic Analysis \textbf{19}(3) (2005)
+  340--358
+
+\bibitem{reinhard2001color}
+Reinhard, E., Adhikhmin, M., Gooch, B., Shirley, P.:
+\newblock Color transfer between images.
+\newblock IEEE Computer graphics and applications \textbf{21}(5) (2001)  34--41
+
+\bibitem{sunkavalli2010multi}
+Sunkavalli, K., Johnson, M.K., Matusik, W., Pfister, H.:
+\newblock Multi-scale image harmonization.
+\newblock In: ACM Transactions on Graphics (TOG). Volume~29., ACM (2010)  125
+
+\bibitem{perez2003poisson}
+P{\'e}rez, P., Gangnet, M., Blake, A.:
+\newblock Poisson image editing.
+\newblock ACM Transactions on graphics (TOG) \textbf{22}(3) (2003)  313--318
+
+\bibitem{tao2010error}
+Tao, M.W., Johnson, M.K., Paris, S.:
+\newblock Error-tolerant image compositing.
+\newblock In: European Conference on Computer Vision, Springer (2010)  31--44
+
+\bibitem{tsai2016sky}
+Tsai, Y.H., Shen, X., Lin, Z., Sunkavalli, K., Yang, M.H.:
+\newblock Sky is not the limit: semantic-aware sky replacement.
+\newblock ACM Trans. Graph. \textbf{35}(4) (2016)  149--1
+
+\bibitem{johnson2011cg2real}
+Johnson, M.K., Dale, K., Avidan, S., Pfister, H., Freeman, W.T., Matusik, W.:
+\newblock Cg2real: Improving the realism of computer generated images using a
+  large collection of photographs.
+\newblock IEEE Transactions on Visualization and Computer Graphics
+  \textbf{17}(9) (2011)  1273--1285
+
+\bibitem{mirza2014conditional}
+Mirza, M., Osindero, S.:
+\newblock Conditional generative adversarial nets.
+\newblock arXiv preprint arXiv:1411.1784 (2014)
+
+\bibitem{yu2015multi}
+Yu, F., Koltun, V.:
+\newblock Multi-scale context aggregation by dilated convolutions.
+\newblock arXiv preprint arXiv:1511.07122 (2015)
+
+\bibitem{odena2016deconvolution}
+Odena, A., Dumoulin, V., Olah, C.:
+\newblock Deconvolution and checkerboard artifacts.
+\newblock Distill (2016)
 
 \end{thebibliography}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  7 MAR 2018 01:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  10 MAR 2018 03:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -408,51 +408,59 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 28.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (0.42422pt too wide) in paragraph at lines 31--32
-[]\OT1/cmr/m/n/9 We in-tro-duce a novel ar-chi-tec-ture and train-ing scheme, c
-alled
- []
-
-
-Overfull \hbox (0.1389pt too wide) in paragraph at lines 31--32
-\OT1/cmr/m/n/9 lever-ag-ing the pow-er-ful per-cep-tual sim-i-lar-ity loss and 
-de-cay-ing the weight
+Overfull \hbox (7.35335pt too wide) in paragraph at lines 31--32
+[]\OT1/cmr/m/n/9 Recent ad-vances in deep gen-er-a-tive mod-els have shown prom
+is-
  []
 
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-Underfull \vbox (badness 5105) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-[3] (./eccv2018submission.bbl
+[3] [4] [5] [6] [7] (./eccv2018submission.bbl [8
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
+]
+Missing character: There is no ï in font cmr9!
+Missing character: There is no ¿ in font cmr9!
+Missing character: There is no ¼ in font cmr9!
 
-) [4
+Underfull \hbox (badness 1888) in paragraph at lines 131--135
+[]\OT1/cmr/m/n/9 Radford, A., Metz, L., Chin-tala, S.:  Un-su-per-vised rep-re-
+sen-ta-tion learn-
+ []
 
-] (./eccv2018submission.aux) ) 
+[9]) [10] (./eccv2018submission.aux) ) 
 Here is how much of TeX's memory you used:
- 3435 strings out of 492995
- 46136 string characters out of 6132704
- 130039 words of memory out of 5000000
- 6924 multiletter control sequences out of 15000+600000
- 8375 words of font info for 32 fonts, out of 8000000 for 9000
+ 3507 strings out of 492995
+ 47257 string characters out of 6132704
+ 130228 words of memory out of 5000000
+ 6988 multiletter control sequences out of 15000+600000
+ 11836 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,9n,26p,1489b,249s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2017/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmr10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmss10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmss8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmss9.pfb>
-Output written on eccv2018submission.pdf (4 pages, 94445 bytes).
+ 39i,10n,27p,2347b,364s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmbx5.pfb></usr/local/texlive/2017/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr5.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmss10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmss8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmss9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmsy10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmti7.pfb>
+Output written on eccv2018submission.pdf (10 pages, 206810 bytes).
 PDF statistics:
- 45 PDF objects out of 1000 (max. 8388607)
- 31 compressed objects within 1 object stream
+ 97 PDF objects out of 1000 (max. 8388607)
+ 69 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

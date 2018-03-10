@@ -2,47 +2,50 @@ This is BibTeX, Version 0.99d (TeX Live 2017)
 Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: eccv2018submission.aux
 The style file: splncs.bst
-I found no \citation commands---while reading file eccv2018submission.aux
 Database file #1: egbib.bib
-You've used 0 entries,
+Warning--can't use both volume and number fields in hays2007scene
+Warning--can't use both volume and number fields in li2017generative
+Warning--can't use both volume and number fields in yang2017high
+Warning--can't use both volume and number fields in sunkavalli2010multi
+You've used 43 entries,
             2087 wiz_defined-function locations,
-            489 strings with 3730 characters,
-and the built_in function-call counts, 20 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 9
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
+            708 strings with 11774 characters,
+and the built_in function-call counts, 13030 in all, are:
+= -- 1245
+> -- 598
+< -- 32
++ -- 214
+- -- 171
+* -- 896
+:= -- 1768
+add.period$ -- 66
+call.type$ -- 43
+change.case$ -- 43
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
+cite$ -- 47
+duplicate$ -- 696
+empty$ -- 1252
+format.name$ -- 171
+if$ -- 3171
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 3
-num.names$ -- 0
-pop$ -- 0
+int.to.str$ -- 43
+missing$ -- 43
+newline$ -- 218
+num.names$ -- 43
+pop$ -- 189
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1
+skip$ -- 435
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 640
+swap$ -- 337
+text.length$ -- 32
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 2
-(There was 1 error message)
+warning$ -- 4
+while$ -- 106
+width$ -- 45
+write$ -- 481
+(There were 4 warnings)
