@@ -56,18 +56,43 @@ Here $k$ refers to the patch scale. $p$ is the patch covering the hole. $\hat{F}
 \begin{eqnarray}
 \min\limits_G\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k) = \sum\limits_{k=1,2,3}E_{(s,x)}[\log (s,x)] + E_s[\log (Q-D_k(s,G(s)))].
 \end{eqnarray}
+\label{eqn:adversarial_loss}
 Here $Q$ is a patch-wise real/fake vector, based on whether the patch overlaps with the holes. Using multiple GAN discriminators at the same or different image scale has been proposed in unconditional GANs~\cite{durugkar2016generative} and conditional GANs~\cite{wang2017high}. Here we extend the design to take into account inpainting hole locations, which is critical in obtaining semantically and locally coherent image completion results.
 
 Our full objective combines both losses is therefore defined as:
 \begin{eqnarray}
-\min\limits_G((\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k))+\lambda\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p))
+\min\limits_G((\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k))+\lambda_{PPL}\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p))
 \end{eqnarray}
 
-where $\lambda$ controls the importance of the two terms. We set $\lambda=10$ in our experiments.
+where $\lambda$ controls the importance of the two terms. We set $\lambda_{PPL}=10$ in our experiments.
 
 \subsection{Procedural Training with Adversarial Loss Annealing}
 \label{sec:procedural}
+Our experiments show that using the described generator head and training losses already give inpainting results better than state-of-the-art. However, the results can still lack fine details, especially when synthesizing textures. There could also be noise patterns when the image is complicated. A straight-forward effort to improve the results would be to stack more intermediate residual blocks to further expand the receptive view, and also increase the expressiveness of the model. However, we found that directly stacking more residual blocks makes it more difficult to stabilize the training. As the search space becomes much larger, it is also more challenging to find local optimum. In the end, the inpainting quality deteriorates as the model depth increases.
 
-\noindent\textbf{Multiple Output.}
+Recently, Progressive GAN~\cite{karras2017progressive} was proposed as a new training methodology for generative adversarial networks. The key idea is to grow both the generator and discriminator progressively, by adding new layers that model increasingly fine details as training progresses. This strategy makes the training faster and more stable and enables it to synthesize mega-pixel images with unprecedented visual quality.  
 
-Our algorithm can be summarized in Alg.
+We adapt this idea for image inpanting and propose to use procedural block-wise training to gradually increase the depth of the inpainting network. More specifically, we begin by training the generator head until it converges. Then, we add a new residual block after the already trained residual blocks, right before the back-end upsampling layers. In order to smoothly introduce the new residual block without suddenly breaking the trained model, we add another skip path from the trained residual blocks to the upsampling layers. Initially, the weight of the skip path is set to 1, while the weight of the path containing the new block is set to 0. This essentially makes the initial network identical to the already trained network. We then slowly decrease the weight of the skip path and increase the weight of the new residual block as training progresses. In this way, the newly introduced residual block is trained to be a fine-tuning component, which adds another layer of fine details to the original results. This step are repeated multiple times, where each time we expand the model by adding a new residual block. In our experiment, we found that the results improve significantly after fine-tuning with the first additional residual block. The output becomes stabilized after three residual blocks, and no discernible changes can be detected if more residual blocks are introduced. The procedural training process is illustrated in Fig..
+
+We observe that the block-wise procedural training has several benefits. First, it guides the training process of a very deep generator. Starting with the generator head and gradually fine-tuning with more residual blocks makes it easier to discover the mapping between the incomplete image and the complete image, even though the search space is large given the diversity of natural images and the random holes. Another benefit is reduced training time, as we found decoupling the training of the generator head and the fine-tuning of additional residual blocks requires significantly less training time comparing with training the network all at once.
+
+\noindent\textbf{Adversarial Loss Annealing} During training, the generator adversarial loss updates the generator weight if the discriminator successfully detects the generated image as fake:
+\begin{eqnarray*}
+\sum\limits_{k=1,2,3}E_s[\log (\bar{Q}-D_k(s,G(s)))].
+\end{eqnarray*}
+Note that here $\bar{Q}$ reverses $Q$ of~\ref{eqn:adversarial_loss}. As shown in Figure., we observe that the generator adversarial loss becomes dominant over PPL as training progresses. This is because the discriminator becomes increasingly good at detecting fake images during training. This is less of a problem for image synthesis tasks. However, for our inpainting task, the outcome is that the generator deliberately adds noise patterns to confuse the discriminators, bringing more artifact to output or even synthesizing wrong textures. Based on this observation, we propose to use adversarial loss annealing, which decreases the weight of the generator adversarial loss when adding new residual block. More formally, let the initial weight of the generator adversarial loss be $\lambda^0_{G_{adv}}$, and the weight of the generator adversarial loss be $\lambda^i_{G_{adv}}$ after adding the $i_{th}$ residual block. We found that simply decay the weight linearly by setting $\lambda^i_{G_{adv}}=0.1^i\lambda^0_{G_{adv}}$ reduces the noise level. Detailed results are shown in Sec.~\ref{sec:results}.
+
+We summarize the discussed training schemes in Alg.~\ref{algo}.
+\begin{algorithm}
+\caption{Training the Inpainting Network}\label{algo}
+\begin{algorithmic}[1]
+\State Set $\lambda_{PPL}\gets 10$ and $\lambda^0_{G_{adv}}$
+\State Train the Generator Head $G_0$ until converges.
+\For{i=1 to 3}
+\State Set $\lambda^i_{G_{adv}}=0.1^i\lambda^0_{G_{adv}}$
+\State Add the skip path and the residual block $r_i$ 
+\State Train the new generator $G_i$ until it converges.
+\EndFor
+\State \textbf{return} $G_3$ 
+\end{algorithmic}
+\end{algorithm}
