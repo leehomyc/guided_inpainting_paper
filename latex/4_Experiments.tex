@@ -11,10 +11,7 @@ In order to compare with existing methods, we train on images of size 256x256. W
 
 For all our training, we set the learning rate with polynomial decay starting from 0.0002, and adopt Adam for optimization. We set the batch size to 8, and regardless of the actual dataset size, we train 150,000 iterations for the generator head and another 1,500 iterations for each additional residual block. For each dataset, the training takes around 2 days to finish on a single Titan X GPU.
 
-\begin{figure}[H]
-\centering
-\small
-\begin{tabular}{cccc}
+\begin{longtable}{cccc}
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_input_image.png}&
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_input_image.png}&
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_input_image.png}&
@@ -43,11 +40,12 @@ For all our training, we set the learning rate with polynomial decay starting fr
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_synthesized_image.png}&
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_synthesized_image.png}&
   \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_synthesized_image.png}\\
-\end{tabular}
-\caption{Fixed hole completion comparison. From top row to bottom row: input image, CAF, CE, NPS, GIL and our final results.}
+\caption{Fixed hole completion comparison. From top row to bottom row: input image, CAF, CE, NPS, GLI and our final results.}
+\end{longtable}
+
 \label{fig:center}
 \vspace{-10pt}
-\end{figure}
+%\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -74,7 +72,7 @@ For all our training, we set the learning rate with polynomial decay starting fr
 \includegraphics[width=.24\textwidth]{figures/random/000000270244.png}&
 \includegraphics[width=.24\textwidth]{figures/random/000000286994.png} \\
 \end{tabular}
-\caption{Random hole completion comparison. From top row to bottom row: input image, CAF results, GIL results, our generator head results, our final results.}
+\caption{Random hole completion comparison. From top row to bottom row: input image, CAF results, GLI results, our generator head results, our final results.}
 \label{fig:random}
 \vspace{-10pt}
 \end{figure}
@@ -85,27 +83,27 @@ At 256x256, we compare our results with Content-Aware Fill (CAF)~\cite{barnes200
 
 Based on the visual results we can see that, for CAF as a non-learning and patch-based approach, its main issue is the inability to generate novel objects not available in the known context. This is especially an issue for highly specific and complex structure such as face inpainting. Furthermore, while CAF is able to generate realistic-looking details, they do not always capture the global structure and the inpainting is often inconsistent when the contexts are complex. CE's result is blurrier, and the border between the hole and the context is easily detectable. Comparing with NPS, our approach is much faster, as it is purely feed-forward while NPS is optimization-based. In fact, NPS takes about 20 seconds to inpaint an image of 256x256 and 60 seconds for an 512x512 image. Our results are also visually better than NPS on 256x256. Comparing with GLI, our results do not need fine-tuning, and are less noisy, more coherent, and have better quality. 
 
-For CelebA, we compare with Generative Face Completion~\cite{li2017generative} in Fig. To demonstrate the effectiveness of our method on large images, we also show our 512x512 results and compare with with NPS~\cite{yang2017high}. NPS is the only neural-based method that is shown to be able to handle 512x512 images but is exceptionally slow. Our approach is able to generate results of similar quality on large images simply using forward inference.
+For CelebA, we compare with Generative Face Completion~\cite{li2017generative} in Fig. Since~\cite{li2017generative}'s model inpaints images of 128x128, we have to upsample the results to 256x256 to compare. The images shown are chosen at random, not cherry-picked. We can see that although~\cite{li2017generative} is a specifically designed model for face inpainting, our model generates much better results.
 
 \begin{figure}[h!]
 \centering
 \small
 \begin{tabular}{cccccc}
 \includegraphics[width=.16\textwidth]{figures/face/000189_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/placeh.png}&
+\includegraphics[width=.16\textwidth]{figures/face/res1/res.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/000189_synthesized_image.png}&
 \includegraphics[width=.16\textwidth]{figures/face/000194_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/placeh.png}&
+\includegraphics[width=.16\textwidth]{figures/face/res2/res.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/000194_synthesized_image.png}\\
 \includegraphics[width=.16\textwidth]{figures/face/000197_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/placeh.png}&
+\includegraphics[width=.16\textwidth]{figures/face/res3/res.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/000197_synthesized_image.png}&
 \includegraphics[width=.16\textwidth]{figures/face/000200_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/placeh.png}&
+\includegraphics[width=.16\textwidth]{figures/face/res4/res.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/000200_synthesized_image.png}\\
 (a) Input & (b) GFC~\cite{li2017generative} & (c) Ours & (d) Input & (e) GFC~\cite{li2017generative} & (f) Ours \\
 \end{tabular}
-\caption{Face completion results.}
+\caption{Face completion results comparing with~\cite{li2017generative}.}
 \label{fig:face}
 \vspace{-5pt}
 \end{figure}  
@@ -123,7 +121,7 @@ For CelebA, we compare with Generative Face Completion~\cite{li2017generative} i
     & 1660 & \textbf{363.5} & 0.9010\\ \hline
     \multirow{2}{*}{CE~\cite{pathak2016context}} & 2693 & 545.8 & 0.7719\\ \cline{2-4}
     & N/A & N/A & N/A\\ \hline
-    \multirow{2}{*}{GIL~\cite{iizuka2017globally}} & 868.6 & 269.7 & 0.9452 \\ \cline{2-4}
+    \multirow{2}{*}{GLI~\cite{iizuka2017globally}} & 868.6 & 269.7 & 0.9452 \\ \cline{2-4}
     & 1640 & 378.7 & 0.9020\\ \hline
     \multirow{2}{*}{Ours (Generator Head)} & 913.8 & 245.6 & 0.9458  \\ \cline{2-4}
     & 1629 & 439.4 & 0.9073\\ \hline
@@ -133,18 +131,39 @@ For CelebA, we compare with Generative Face Completion~\cite{li2017generative} i
   \end{tabular}}
   }
   \end{center}
-  \caption{Numerical comparison between CAF, CE and GIL, our generator head results and our final results. Up/down are results of center/random region completion. Note that for SSIM, larger values mean greater similarity in terms of content structure and are indicators of better performance.}
+  \caption{Numerical comparison between CAF, CE and GLI, our generator head results and our final results. Up/down are results of center/random region completion. Note that for SSIM, larger values mean greater similarity in terms of content structure and are indicators of better performance.}
   \vspace{-10pt}
   \label{table:numerical}
 \end{table}
 
 \noindent\textbf{User Study}
-To more rigorously evaluate the performance, we conduct a user study based on the random hole results. We ask 10 users to compare the results, by giving each user 30 image sets to rank the visual quality. Each set contains CAF, GLI, and our result respectively. The survey results give convincing evidence that our method works better than other approaches. Among 300 comparisons, ?\% of the time our results are ranked highest. For the rest of the comparisons, ?\% of the time our results have higher ratings than GIL. This shows that our results have significant advantages over GLI, and are also better or comparable with CAF most of the time.
+To more rigorously evaluate the performance, we conduct a user study based on the random hole results. We ask 20 users to compare the results, by giving each user 30 image sets to rank the visual quality. Each set contains NPS, GLI, and our result respectively. The survey results give convincing evidence that our method works better than other approaches. Among 300 comparisons, 72.3\% of the time our results are ranked highest. In particular, our results are overwhelmingly better than NPS, and in 95.8\% of the comparisons our results are better. 73.5\% of our results are better than GLI, and 15.5\% have similar qualities. This shows that our results have significant advantages over GLI, and are also better or comparable with CAF most of the time.
 
 \subsection{Ablation Study}
 \label{exp:study}
 
 \noindent\textbf{Comparison of Convolutional Layer} Choosing the proper convolutional layer improves the inpainting quality and also reduces the noise. We consider three types of convolutional layers: vanilla, dilated~\cite{yu2015multi} and interpolated~\cite{odena2016deconvolution}, and train three networks to specifically test the effects of different convolutional layers. Fig. shows an example of qualitative comparisons. We can see that using dilation significantly improve the inpainting quality comparing with vanilla convolutional layer and interpolated convolutional layer, as the latter generates results that are over-smoothed.  
+
+\begin{figure}[h!]
+\centering
+\small
+\begin{tabular}{ccccc}
+\includegraphics[width=.2\textwidth]{figures/conv/000000188439_input_image.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image-0.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image-1.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image.jpg}\\
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_input_image.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-0.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-1.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image.jpg}\\
+(a) & (b) & (c) & (d) & (e)  \\
+\end{tabular}
+\caption{Effects of different types of convolutional layers. (a) Input. (b) Vanilla (c) Interpolated (d) Dilated+Interpolated (e) Dilated (ours).}
+\label{fig:face}
+\vspace{-5pt}
+\end{figure}  
 
 \noindent\textbf{Effect of Procedural Training} Qualitative comparisons in Sec.~\ref{exp:comparison} shows that procedurally adding residual blocks to fine-tune improves the results. However, one may wonder whether we can directly train a deeper network. To find out, we trained the same number of iterations for a network with 12 residual blocks from scratch. Fig.~\ref{fig:proc} shows two examples of the results of inpainting using the trained model comparing with the results of the block-wise trained model. For all the test images, we found that increasing number of layers actually has a negative effect on inpainting, due to a variety of factors such as gradient vanishing, optimization difficulty, etc. This experiment demonstrates the necessity and importance of the procedural training scheme.
 
@@ -184,7 +203,24 @@ To more rigorously evaluate the performance, we conduct a user study based on th
 \vspace{-10pt}
 \end{figure}  
 
-\noindent\textbf{Comparing Patch Perceptual Losses with $\ell_2$} We compare the quality of inpainting that is trained with patch perceptual loss and $\ell_2$ loss. $\ell_2$ is used to train CE and GLI, but it does not correspond well to human perception of similarity, as discussed in Sec.~\ref{sec:procedural}. We investigate how our Patch Perceptual Loss compares with $\ell_2$ loss by training the same network and only using different reconstruction loss. From the test cases, we see that our results are overwhelmingly better than $\ell_2$ results in terms of sharpness and coherence with context.
+\noindent\textbf{Comparing Patch Perceptual Losses with $\ell_2$} We compare the quality of inpainting that is trained with patch perceptual loss and $\ell_2$ loss. $\ell_2$ is used to train CE and GLI, but it does not correspond well to human perception of similarity, as discussed in Sec.~\ref{sec:procedural}. We investigate how our Patch Perceptual Loss compares with $\ell_2$ loss by training the same network and only using different reconstruction loss. From the test cases, we see that our results are overwhelmingly better than $\ell_2$ results in terms of sharpness and coherence with context. We leave detailed discussion of training losses to Supplementary Materials.
+
+\begin{figure}[h!]
+\centering
+\small
+\begin{tabular}{cccccc}
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.png}&
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.png}&
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.jpg}\\
+(a) Input & (b) $\ell_2$ & (c) Ours & (d) Input & (e) $\ell_2$ & (f) Ours\\
+\end{tabular}
+\caption{Effects of different types of reconstruction losses. Zoom in for best quality.}
+\label{fig:face}
+\vspace{-5pt}
+\end{figure}  
 
 \subsection{Interactive Guided Inpainting}
 \label{exp:guided} 
