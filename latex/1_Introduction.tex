@@ -8,18 +8,17 @@ Traditional image inpainting methods mostly develop texture synthesis techniques
 \centering
 \setlength\tabcolsep{1pt}
 \begin{tabular}{cccccc}
-  \includegraphics[width=.33\textwidth]{figures/teaser/000000120572_input_image.jpg}&
-  \includegraphics[width=.33\textwidth]{figures/teaser/output_mask17.png}&
-  \includegraphics[width=.33\textwidth]{figures/teaser/000000120572_synthesized_image.jpg} \\
-  (a) Input  & (b) GLI~\cite{iizuka2017globally} & (c) Ours  \\
-  \includegraphics[width=.33\textwidth]{figures/teaser/input.jpg}&
-  \includegraphics[width=.33\textwidth]{figures/teaser/dh.jpg}&
-  \includegraphics[width=.33\textwidth]{figures/teaser/ours.jpg} \\
-  (a) Input  & (b) DH~\cite{tsai2017deep} & (c) Ours  \\
+  \includegraphics[width=.16\textwidth]{figures/teaser/000000120572_input_image.jpg}&
+  \includegraphics[width=.16\textwidth]{figures/teaser/output_mask17.jpg}&
+  \includegraphics[width=.16\textwidth]{figures/teaser/000000120572_synthesized_image.jpg} &
+    \includegraphics[width=.16\textwidth]{figures/teaser/input.jpg}&
+  \includegraphics[width=.16\textwidth]{figures/teaser/dh.jpg}&
+  \includegraphics[width=.16\textwidth]{figures/teaser/ours.jpg} \\
+  (a) Input  & (b) GLI~\cite{iizuka2017globally} & (c) Ours & (c) Input  & (d) DH~\cite{tsai2017deep} & (e) Ours  \\
 \end{tabular}
-\caption{An example of inpainting (top) and harmonzation (bottom) comparing with state-of-the-art methods. Zoom in for best viewing.}
+\caption{An example of inpainting (top) and harmonzation (bottom) comparing with state-of-the-art methods. Zoom in for best viewing quality.}
 \label{fig:teaser}
-\vspace{-10pt}
+\vspace{-15pt}
 \end{figure}
 
 More recently, deep neural networks have shown excellent performance in various image completion tasks, such as texture synthesis and image completion. For inpainting, adversarial training becomes the de facto strategy to generate sharp details and natural looking results~\cite{pathak2016context,yeh2016semantic,li2017generative,yang2017high,iizuka2017globally}. Pathak et al.~\cite{pathak2016context} first proposes to train an encoder-decoder model for inpainting using both the reconstruction loss and adversarial loss. In~\cite{yeh2016semantic}, Yeh et al. uses a pre-trained model to find the most similar encoding of a corrupted image and uses the found encoding to synthesize what is missing. In~\cite{yang2017high}, Yang et al. proposes a multi-scale approach and optimizes the hole contents such that its neural feature extracted from a pre-trained CNN matches with the features of the surrounding context. The optimization scheme improves the inpainting quality and resolution at the cost of computational efficiency. In~\cite{iizuka2017globally}, Iizuka et al. proposes a deep generative model trained with global and local adversarial losses, and can achieve good inpainting performance for mid-size images and holes. However, it requires extensive training (two months as described in the paper), and the results often contain excessive artifacts and noise patterns. Another limitation of ~\cite{yang2017high} and ~\cite{iizuka2017globally} is that they are unable to handle perceptual discontinuity, making it necessary to resort to post-processing (e.g. Poisson blending).

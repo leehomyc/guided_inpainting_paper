@@ -1,114 +1,112 @@
 %!TEX root = guided_inpainting_paper.tex
 \section{Results}
 \label{sec:results}
-In this section, we first describe our dataset and experiment setting (Sec.~\ref{exp:setup}). We then provide quantitative and qualitative comparisons with several methods, and also report a subjective human perceptual test with user-study (Sec.~\ref{exp:comparison}). In Sec.~\ref{exp:study}, we conduct several ablation study about the design choice of the models, losses, and training scheme. Finally, we show how our method can be applied to real use cases of object removal and guided inpanting. In particular, the inpainting model can be adapted to train an image harmonization network, which generates state-of-the-art harmonization results. We then demonstrate that by jointly training a model for inpainting and harmonization we can easily achieve guided inpainting (Sec.~\ref{exp:guided}).
+In this section, we first describe our datasets and experiment setting (Sec.~\ref{exp:setup}). We then provide quantitative and qualitative comparisons with several methods, and also report a subjective human perceptual test based on user-study (Sec.~\ref{exp:comparison}). In Sec.~\ref{exp:study}, we conduct several ablation study about the design choice of the framework. Finally, we show how our method can be applied to image harmonization and interactive guided inpainting (Sec.~\ref{exp:guided}).
 
 \subsection{Experiment Setup}
 \label{exp:setup}
-We evaluate our inpainting method on several representative datasets. COCO~\cite{lin2014microsoft} is a large dataset containing both object and scene images; Place2~\cite{zhou2016places} includes images of a diversity of scenes and was originally meant for scene classification; finally, we train and test on CelebA~\cite{liu2015faceattributes}, which consists of 202,599 face images with various viewpoints and expressions. For a fair comparison, we follow the standard split with 162,770 images for training, 19,867 for validation and 19,962 for testing.
+We evaluate our inpainting method on ImageNet~\cite{russakovsky2015imagenet}, COCO~\cite{lin2014microsoft}, Place2~\cite{zhou2016places} and CelebA~\cite{liu2015faceattributes}. CelebA consists of 202,599 face images with various viewpoints and expressions. For a fair comparison, we follow the standard split with 162,770 images for training, 19,867 for validation and 19,962 for testing.
 
-In order to compare with existing methods, we train on images of size 256x256. We also train another network at a larger scale of 512x512 to demonstrate its ability to handle higher resolutions and compare with neural patch synthesis~\cite{yang2017high}. As the pre-processing step, we first resize the image and then conduct random cropping. We then apply data augmentation with random flipping. For each image, we create a mask containing one or two rectangle holes. The size of the hole ranges from 1/4 to 1/2 of the image's dimension, and are positioned at random locations. Note that during inference, our network is able to handle masks with an arbitrary number of holes of any shape. Finally, we shift and rescale the pixel value from [0,255] to [-1,1] and fill in the masked regions with zeros. We then concatenate the corrupted image and the mask as input.
+In order to compare with existing methods, we train on images of size 256x256. We also train another network at a larger scale of 512x512 to demonstrate its ability to handle higher resolutions (see supplementary material). For each image, we apply a mask with a single hole or two holes at random locations, whose sizes range between 1/4 to 1/2 of the image's dimension
+We set the batch size to 8, and regardless of the actual dataset size, we train 150,000 iterations for the generator head and another 1,500 iterations for each additional residual block. For each dataset, the training takes around 2 days to finish on a single Titan X GPU, which is significantly less training time than~\cite{iizuka2017globally}.
 
-For all our training, we set the learning rate with polynomial decay starting from 0.0002, and adopt Adam for optimization. We set the batch size to 8, and regardless of the actual dataset size, we train 150,000 iterations for the generator head and another 1,500 iterations for each additional residual block. For each dataset, the training takes around 2 days to finish on a single Titan X GPU.
-
-\begin{longtable}{cccc}
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_input_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_input_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_input_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_input_image.png}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_pm.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_pm.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_pm.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_pm.png}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0011_ce2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0034_ce2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0165_ce2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0197_ce2.jpg}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0011_nps2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0034_nps2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0165_nps2.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/0197_nps2.jpg}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_siggraph2017.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_siggraph2017.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_siggraph2017.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_siggraph2017.png}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_g.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_g.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_g.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_g.png}\\
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0011_synthesized_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0034_synthesized_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0165_synthesized_image.png}&
-  \includegraphics[width=.24\textwidth]{figures/imagenet/imagenet_0197_synthesized_image.png}\\
-\caption{Fixed hole completion comparison. From top row to bottom row: input image, CAF, CE, NPS, GLI and our final results.}
-\end{longtable}
-
-\label{fig:center}
+\begin{figure}[h!]
+\centering
+\setlength\tabcolsep{1pt}
+\begin{tabular}{ccccccc}
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0011_input_image.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0011_pm.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0011_ce2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0011_nps2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0011_siggraph2017.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0011_g.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0011_synthesized_image.jpg}\\
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0034_input_image.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0034_pm.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0034_ce2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0034_nps2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0034_siggraph2017.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0034_g.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0034_synthesized_image.jpg}\\
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0165_input_image.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0165_pm.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0165_ce2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0165_nps2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0165_siggraph2017.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0165_g.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0165_synthesized_image.jpg}\\
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0197_input_image.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0197_pm.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0197_ce2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/0197_nps2.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0197_siggraph2017.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0197_g.jpg}&
+\includegraphics[width=.14\textwidth]{figures/imagenet/imagenet_0197_synthesized_image.jpg}\\
+(a) Input & (b) CAF~\cite{barnes2009patchmatch} & (c) CE~\cite{pathak2016context} & (d) NPS~\cite{yang2017high} & (e) GLI~\cite{iizuka2017globally} & (f) GH & (g) Final \\
+\end{tabular}
+\caption{Fixed hole result comparisons. GH are results generated by generator head, and Final are results generated with block procedural training. All images have original size 256x256. Zoom in for best viewing quality.}
+\label{fig:fixed}
 \vspace{-10pt}
-%\end{figure}
+\end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h!]
 \centering
 \small
-\begin{tabular}{cccc}
-\includegraphics[width=.24\textwidth]{figures/random/000000153299_ip.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000266409_ip.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000270244_ip.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000286994_ip.jpg} \\
-\includegraphics[width=.24\textwidth]{figures/random/000000153299_pm.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000266409_pm.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000270244_pm.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000286994_pm.jpg} \\
-\includegraphics[width=.24\textwidth]{figures/random/000000153299_sig.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000266409_sig.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000270244_sig.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000286994_sig.jpg} \\
-\includegraphics[width=.24\textwidth]{figures/random/000000153299_g.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000266409_g.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000270244_g.jpg}&
-\includegraphics[width=.24\textwidth]{figures/random/000000286994_g.jpg} \\
-\includegraphics[width=.24\textwidth]{figures/random/000000153299.png}&
-\includegraphics[width=.24\textwidth]{figures/random/000000266409.png}&
-\includegraphics[width=.24\textwidth]{figures/random/000000270244.png}&
-\includegraphics[width=.24\textwidth]{figures/random/000000286994.png} \\
+\begin{tabular}{ccccc}
+\includegraphics[width=.2\textwidth]{figures/random/000000153299_ip.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000153299_pm.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000153299_sig.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000153299_g.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000153299.jpg}\\
+\includegraphics[width=.2\textwidth]{figures/random/000000266409_ip.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000266409_pm.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000266409_sig.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000266409_g.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000266409.jpg}\\
+\includegraphics[width=.2\textwidth]{figures/random/000000286994_ip.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000286994_pm.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000286994_sig.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000286994_g.jpg}&
+\includegraphics[width=.2\textwidth]{figures/random/000000286994.jpg}\\
+(a) Input & (b) CAF~\cite{barnes2009patchmatch} & (c) GLI~\cite{iizuka2017globally} & (d) GH & (e) Final \\
 \end{tabular}
-\caption{Random hole completion comparison. From top row to bottom row: input image, CAF results, GLI results, our generator head results, our final results.}
+\caption{Random hole completion comparison. GH are results generated by generator head, and Final are results generated with block procedural training. All images have original size 256x256. Zoom in for best viewing quality.}
 \label{fig:random}
 \vspace{-10pt}
 \end{figure}
 
 \subsection{Comparison with Existing Methods}
 \label{exp:comparison}
-At 256x256, we compare our results with Content-Aware Fill (CAF)~\cite{barnes2009patchmatch}, Context Encoder (CE)~\cite{pathak2016context}, Neural Patch Synthesis (NPS)~\cite{yang2017high} and Global Local Inpainting (GLI)~\cite{iizuka2017globally}. For CE and GLI, we use off-the-shelf pre-trained models from the web. Note CE's model is trained with center holes and other models are able to handle random holes. We evaluate on both settings, using random holes (Fig.~\ref{fig:random}) or center holes (Fig.~\ref{fig:center}). For center hole completion, we compare with CAF, CE, NPS and GLI on ImageNet~\cite{russakovsky2015imagenet} test images. In this case, our results are directly generated by models trained on COCO. For random completion, we compare with CAF and GLI using images from COCO and Place2. Note GLI's results are after Poisson Blending as post-processing, which other methods do not use. For our approach, we show the results generated by the Generator Head alone as well as the final results using procedural training as refinement. The comparison results shown are randomly sampled from the entire test set. 
+For ImageNet, COCO and Place2, we compare our results with Content-Aware Fill (CAF)~\cite{barnes2009patchmatch}, Context Encoder (CE)~\cite{pathak2016context}, Neural Patch Synthesis (NPS)~\cite{yang2017high} and Global Local Inpainting (GLI)~\cite{iizuka2017globally}. For CE, NPS, and GLI, we use pre-trained models released by the authors. CE and NPS are only trained with holes with fixed size and location (image center), while CAF and GLI can handle arbitrary holes. For fair comparisons, we evaluate on both settings. For center hole completion, we compare with CAF, CE, NPS and GLI on ImageNet~\cite{russakovsky2015imagenet} test images. Our results are directly generated by models trained on COCO. For random hole completion, we compare with CAF and GLI using test images from COCO and Place2. Only GLI's results use Poisson Blending as post-processing. We also show the results by the Generator Head and compare. The images shown in Fig.~\ref{fig:fixed},~\ref{fig:random} are randomly sampled from the test set. 
 
-Based on the visual results we can see that, for CAF as a non-learning and patch-based approach, its main issue is the inability to generate novel objects not available in the known context. This is especially an issue for highly specific and complex structure such as face inpainting. Furthermore, while CAF is able to generate realistic-looking details, they do not always capture the global structure and the inpainting is often inconsistent when the contexts are complex. CE's result is blurrier, and the border between the hole and the context is easily detectable. Comparing with NPS, our approach is much faster, as it is purely feed-forward while NPS is optimization-based. In fact, NPS takes about 20 seconds to inpaint an image of 256x256 and 60 seconds for an 512x512 image. Our results are also visually better than NPS on 256x256. Comparing with GLI, our results do not need fine-tuning, and are less noisy, more coherent, and have better quality. 
+Based on the visual results we can see that, for CAF as a non-learning and patch-based approach, while it can generate realist-looking details, they often fail to capture the global structure or synthesize new contents. CE's result is much more blurry as it can only inpaint low-resolution holes. Comparing with NPS, our approach is visually better and much faster. Comparing with GLI, our results do not need post-processing, and are less noisy and more coherent. Our final results also show significant improvement over generator head's results, demonstrating the effectiveness block-wise procedural fine-tuning.
 
-For CelebA, we compare with Generative Face Completion~\cite{li2017generative} in Fig. Since~\cite{li2017generative}'s model inpaints images of 128x128, we have to upsample the results to 256x256 to compare. The images shown are chosen at random, not cherry-picked. We can see that although~\cite{li2017generative} is a specifically designed model for face inpainting, our model generates much better results.
+For CelebA, we compare with Generative Face Completion~\cite{li2017generative} in Fig.~\ref{fig:face}. Since~\cite{li2017generative}'s model inpaints images of 128x128, we directly upsample the results to 256x256 to compare. The images shown are also chosen at random. We can see that although~\cite{li2017generative} is an approach specific for face inpainting, we still generate results of much higher quality.
 
 \begin{figure}[h!]
 \centering
 \small
 \begin{tabular}{cccccc}
-\includegraphics[width=.16\textwidth]{figures/face/000189_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/face/000189_input_image.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/res1/res.jpg}&
-\includegraphics[width=.16\textwidth]{figures/face/000189_synthesized_image.png}&
-\includegraphics[width=.16\textwidth]{figures/face/000194_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/face/000189_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/face/000194_input_image.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/res2/res.jpg}&
-\includegraphics[width=.16\textwidth]{figures/face/000194_synthesized_image.png}\\
-\includegraphics[width=.16\textwidth]{figures/face/000197_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/face/000194_synthesized_image.jpg}\\
+\includegraphics[width=.16\textwidth]{figures/face/000197_input_image.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/res3/res.jpg}&
-\includegraphics[width=.16\textwidth]{figures/face/000197_synthesized_image.png}&
-\includegraphics[width=.16\textwidth]{figures/face/000200_input_image.png}&
+\includegraphics[width=.16\textwidth]{figures/face/000197_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/face/000200_input_image.jpg}&
 \includegraphics[width=.16\textwidth]{figures/face/res4/res.jpg}&
-\includegraphics[width=.16\textwidth]{figures/face/000200_synthesized_image.png}\\
+\includegraphics[width=.16\textwidth]{figures/face/000200_synthesized_image.jpg}\\
 (a) Input & (b) GFC~\cite{li2017generative} & (c) Ours & (d) Input & (e) GFC~\cite{li2017generative} & (f) Ours \\
 \end{tabular}
 \caption{Face completion results comparing with~\cite{li2017generative}.}
 \label{fig:face}
-\vspace{-5pt}
+\vspace{-10pt}
 \end{figure}  
 
-\noindent\textbf{Quantitative Evaluation} Table~\ref{table:numerical} shows quantitative comparison between CAF, CE, GLI and our approach. The values are computed based a random subset of 200 images selected from the test set. Both the $\ell_1$ and $\ell_2$ errors are computed with pixel values normalized between $[0,1]$ and are summed up using all pixels of the image. We can see that our method performs better than other methods in terms of SSIM and $\ell_1$ error. For $\ell_2$, other methods have smaller errors, possibly due to the fact that our model is trained with perceptual loss rather than $\ell_2$ loss. In addition, from the numerical values, we can see that procedural fine-tuning further reduces the error of the generator head. This is also validated by qualitative improvements shown in Fig.~\ref{fig:center} and Fig.~\ref{fig:random}.  
+\noindent\textbf{Quantitative Evaluation} Table~\ref{table:numerical} shows quantitative comparison between CAF, CE, GLI and our approach. The values are computed based a random subset of 200 images selected from the test set. Both the $\ell_1$ and $\ell_2$ errors are computed with pixel values normalized between $[0,1]$ and are summed up using all pixels of the image. We can see that our method performs better than other methods in terms of SSIM and $\ell_1$ error. For $\ell_2$, CAF and GLI have smaller errors. This is understandable as our model is trained with perceptual loss rather than $\ell_2$ loss. Besides, $\ell_2$ loss awards averaging color values and does not faithfully reflect perceptual quality. From the numerical values, we can also see that procedural fine-tuning reduces the errors from the generator head. 
 
 \begin{table}[h!]
 \begin{center}
@@ -132,59 +130,54 @@ For CelebA, we compare with Generative Face Completion~\cite{li2017generative} i
   }
   \end{center}
   \caption{Numerical comparison between CAF, CE and GLI, our generator head results and our final results. Up/down are results of center/random region completion. Note that for SSIM, larger values mean greater similarity in terms of content structure and are indicators of better performance.}
-  \vspace{-10pt}
+  \vspace{-20pt}
   \label{table:numerical}
 \end{table}
 
 \noindent\textbf{User Study}
-To more rigorously evaluate the performance, we conduct a user study based on the random hole results. We ask 20 users to compare the results, by giving each user 30 image sets to rank the visual quality. Each set contains NPS, GLI, and our result respectively. The survey results give convincing evidence that our method works better than other approaches. Among 300 comparisons, 72.3\% of the time our results are ranked highest. In particular, our results are overwhelmingly better than NPS, and in 95.8\% of the comparisons our results are better. 73.5\% of our results are better than GLI, and 15.5\% have similar qualities. This shows that our results have significant advantages over GLI, and are also better or comparable with CAF most of the time.
+To more rigorously evaluate the performance, we conduct a user study based on the random hole results. We asked for feedback from 20 users, by giving each user 30 tuples of images to rank. Each tuple contains results of NPS, GLI, and ours. The user study shows our method have highest scores, outperforming NPS and GLI by a large margin. In 600 total comparisons, 72.3\% of them our results are ranked highest. Our results are overwhelmingly better than NPS, where in 95.8\% of the comparisons our results are ranked higher. For GLI, our results are ranked higher in 73.5\% of all comparisons, and are ranked equal in 15.5\% of the tests. 
 
 \subsection{Ablation Study}
 \label{exp:study}
 
-\noindent\textbf{Comparison of Convolutional Layer} Choosing the proper convolutional layer improves the inpainting quality and also reduces the noise. We consider three types of convolutional layers: vanilla, dilated~\cite{yu2015multi} and interpolated~\cite{odena2016deconvolution}, and train three networks to specifically test the effects of different convolutional layers. Fig. shows an example of qualitative comparisons. We can see that using dilation significantly improve the inpainting quality comparing with vanilla convolutional layer and interpolated convolutional layer, as the latter generates results that are over-smoothed.  
+\noindent\textbf{Comparison of Convolutional Layer} Choosing the proper convolutional layer improves the inpainting quality and also reduces the noise. We consider three types of convolutional layers: original, dilated~\cite{yu2015multi} and interpolated~\cite{odena2016deconvolution}, and train three networks under the same condition to specifically test their effects. From the results, we observed that using dilation significantly improves the inpainting quality while using interpolated convolution tends to generate over-smoothed results. Fig.~\ref{fig:conv} shows a qualitative comparison. 
 
 \begin{figure}[h!]
 \centering
 \small
 \begin{tabular}{ccccc}
-\includegraphics[width=.2\textwidth]{figures/conv/000000188439_input_image.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image-0.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image-1.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000188439_synthesized_image.jpg}\\
-\includegraphics[width=.2\textwidth]{figures/conv/000000311303_input_image.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-0.png}&
-\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-1.png}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_input_image.jpg}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image.jpg}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-0.jpg}&
+\includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image-1.jpg}&
 \includegraphics[width=.2\textwidth]{figures/conv/000000311303_synthesized_image.jpg}\\
 (a) & (b) & (c) & (d) & (e)  \\
 \end{tabular}
-\caption{Effects of different types of convolutional layers. (a) Input. (b) Vanilla (c) Interpolated (d) Dilated+Interpolated (e) Dilated (ours).}
-\label{fig:face}
-\vspace{-5pt}
+\caption{Effects of different types of convolutional layers. (a) Input (b) Original (c) Interpolated (d) Dilated+Interpolated (e) Dilated (ours).}
+\label{fig:conv}
+\vspace{-15pt}
 \end{figure}  
 
-\noindent\textbf{Effect of Procedural Training} Qualitative comparisons in Sec.~\ref{exp:comparison} shows that procedurally adding residual blocks to fine-tune improves the results. However, one may wonder whether we can directly train a deeper network. To find out, we trained the same number of iterations for a network with 12 residual blocks from scratch. Fig.~\ref{fig:proc} shows two examples of the results of inpainting using the trained model comparing with the results of the block-wise trained model. For all the test images, we found that increasing number of layers actually has a negative effect on inpainting, due to a variety of factors such as gradient vanishing, optimization difficulty, etc. This experiment demonstrates the necessity and importance of the procedural training scheme.
+\noindent\textbf{Effect of Procedural Training} Qualitative comparisons in Sec.~\ref{exp:comparison} shows that procedurally adding residual blocks to fine-tune improves the results. However, one may wonder whether we can directly train a deeper network. To find out, we trained a network with 12 residual blocks from scratch, keeping all other hyper-parameters the same. Fig.~\ref{fig:proc} shows two examples of the result comparisons. We found that further increasing the number of residual blocks has a negative effect on inpainting, possibly due to a variety of factors such as gradient vanishing, optimization difficulty, etc. This demonstrates the necessity and importance of the procedural training scheme.
 
 \begin{figure}[h!]
 \centering
 \small
 \begin{tabular}{cccccc}
-\includegraphics[width=.16\textwidth]{figures/proc/000000241668_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/proc/000000241668_synthesized_image-1.png}&
-\includegraphics[width=.16\textwidth]{figures/proc/000000241668_synthesized_image.png}&
-\includegraphics[width=.16\textwidth]{figures/proc/000000314034_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/proc/000000314034_synthesized_image-1.png}&
-\includegraphics[width=.16\textwidth]{figures/proc/000000314034_synthesized_image.png}\\
-(a) Input & (b) DT & (c) PT & (d) Input & (e) DT & (f) PT \\
+\includegraphics[width=.16\textwidth]{figures/proc/000000241668_input_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/proc/000000241668_synthesized_image-1.jpg}&
+\includegraphics[width=.16\textwidth]{figures/proc/000000241668_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/proc/000000314034_input_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/proc/000000314034_synthesized_image-1.jpg}&
+\includegraphics[width=.16\textwidth]{figures/proc/000000314034_synthesized_image.jpg}\\
+(a) Input & (b)  & (c)  & (d) Input & (e)  & (f)  \\
 \end{tabular}
 \caption{Result comparison between directly training a network of 12 blocks ((b),(e)) and procedural training ((c), (f)).}
 \label{fig:proc}
 \vspace{-10pt}
 \end{figure}  
 
-\noindent\textbf{Effect of Adversarial Loss Annealing} We investigate the effect of adversarial loss annealing in terms of reducing the noise level. As discussed in Sec.~\ref{sec:procedural}, the adversarial loss becomes dominant at the end phase of training. This leads to noisy results with perceivable artifacts. We show two randomly selected examples of using and not using adversarial loss annealing in Fig.~\ref{fig:aal} From the qualitative comparison, we observe that using adversarial loss annealing not only reduces the noise level but does not sacrifice the overall sharpness and local details.
+\noindent\textbf{Effect of Adversarial Loss Annealing} We also investigate the effect of adversarial loss annealing and train another network without using ALA. Visually, we observe that using adversarial loss annealing reduces the noise level without sacrificing the overall sharpness and realism. We show two randomly selected examples in Fig.~\ref{fig:aal} to illustrate the effects. 
 
 \begin{figure}[h!]
 \centering
@@ -200,38 +193,19 @@ To more rigorously evaluate the performance, we conduct a user study based on th
 \end{tabular}
 \caption{Result comparison between training without AAL and with AAL.}
 \label{fig:aal}
-\vspace{-10pt}
+\vspace{-15pt}
 \end{figure}  
 
-\noindent\textbf{Comparing Patch Perceptual Losses with $\ell_2$} We compare the quality of inpainting that is trained with patch perceptual loss and $\ell_2$ loss. $\ell_2$ is used to train CE and GLI, but it does not correspond well to human perception of similarity, as discussed in Sec.~\ref{sec:procedural}. We investigate how our Patch Perceptual Loss compares with $\ell_2$ loss by training the same network and only using different reconstruction loss. From the test cases, we see that our results are overwhelmingly better than $\ell_2$ results in terms of sharpness and coherence with context. We leave detailed discussion of training losses to Supplementary Materials.
-
-\begin{figure}[h!]
-\centering
-\small
-\begin{tabular}{cccccc}
-\includegraphics[width=.16\textwidth]{figures/loss/000000090208_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.png}&
-\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.jpg}&
-\includegraphics[width=.16\textwidth]{figures/loss/000000490171_input_image.png}&
-\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.png}&
-\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.jpg}\\
-(a) Input & (b) $\ell_2$ & (c) Ours & (d) Input & (e) $\ell_2$ & (f) Ours\\
-\end{tabular}
-\caption{Effects of different types of reconstruction losses. Zoom in for best quality.}
-\label{fig:face}
-\vspace{-5pt}
-\end{figure}  
+Due to space constraint, more ablation study can be found in supplementary material.
 
 \subsection{Interactive Guided Inpainting}
 \label{exp:guided} 
 
-Guided inpainting refers to the task of using another image as guidance to fill in the missing part of the original image. This is extremely useful in practice as people often want to add new objects or replace sceneries. It can also fill in large holes, which is a challenging task without using another image to guide. Interactive guided inpainting allows the user to freely choose the guide image the and region of interest.
+In this section, we consider object-based guided inpainting as a practical scenario. Specifically, we assume the user would like to add to the input image with objects from another guide image. Given an input image $I$ and a guide image $I_g$, we allow the user to select a region of $I_s$ by dragging a bounding box $B_g$ containing the object that he desires to add. Note that unlike previous settings of image composition, we do not require the user to accurately segment the object, but instead only providing a bounding box is sufficient. This greatly reduces the workload and simplifies the task. Next, we perform segmentation use a network to extract the object foreground. The segmentation network is adapted from Mask R-CNN~\cite{he2017mask} and trained on COCO, but is agnostic to object categories and only considers the foreground/background classification. Finally, we resize and paste $B_g$ to $I$. To make the composition look natural and realistic, we need to remove and inpaint the background of $B_g$ and also perform harmonization on the foreground object such that it is coherent the overall image appearance.   
 
-Here we consider the scenario of object-based guided inpainting. Specifically, we assume the user would like to add to the input image with objects from another guide image. Given an input image $I$ and a guide image $I_g$, we allow the user to select a region of $I_s$ by dragging a bounding box $B_g$ containing the object that he desires to add. Note that unlike previous settings of image composition, we do not require the user to accurately segment the object, but instead only providing a bounding box is sufficient. This greatly reduces the workload and simplifies the task. Next, we perform segmentation use a network to extract the object foreground. The segmentation network is adapted from Mask R-CNN~\cite{he2017mask} and trained on COCO, but is agnostic to object categories and only considers the foreground/background classification. Finally, we resize and paste $B_g$ to $I$. To make the composition look natural and realistic, we need to inpaint the background of $B$ and also perform harmonization on object foreground, such that its appearance is compatible with $I$.   
+To accomplish this task with known segmentation, we need to address two separate problems: inpainting and harmonization. Our model can be easily extended to train for both tasks at the same time, only requiring changing the input and output. To train this model, the data acquisition is similar to~\cite{tsai2017deep}, where we create artificially composited images using statistics color transfer~\cite{reinhard2001color} and another randomly chosen guide image. More detailed data acquisition steps can be found in supplementary material.
 
-To accomplish this task, we need to address two separate problems: inpainting and harmonization. Our model can be easily extended to train for both tasks at the same time, only requiring changing the input and output. Our data acquisition is similar to~\cite{tsai2017deep}. Specifically, at each iteration given the input image $I$, we randomly select another image $I_g$ from the dataset. We then select and segment an object $I_o$ from $I$, based on the segmentation mask of COCO. We then transfer the color from $I_g$ to $I_o$, and paste $I_o$ onto $I_g$ at a random location. Finally, we crop a bounding box $I_b$ from $I_g$ that contains $I_o$, and paste $I_b$ back to $I$. The result, together with the foreground/background segmentation mask of $I_b$, is given to the network as input. The model is modified to output two images, one for inpainting result and the other for harmonization result. We use the original $I$ as the ground truth for both tasks.
-
-The network jointly trained for inpainting and harmonization performs well in both tasks. Fig.~\ref{fig:harm} shows that it adjusts the color better than~\cite{tsai2017deep}, which is the state-of-the-art deep harmonization method. Fig.~\ref{fig:guided} shows the interactive guided inpainting results.
+The network jointly trained for inpainting and harmonization performs well in both tasks. Fig.~\ref{fig:harm} shows that it generates harmonization results better than~\cite{tsai2017deep}, which is the state-of-the-art deep harmonization method. Finally, in Fig.~\ref{fig:guided} we show several examples of interactive guided inpainting results.
 
 \begin{figure}[h!]
 \centering
@@ -246,7 +220,7 @@ The network jointly trained for inpainting and harmonization performs well in bo
   \includegraphics[width=.16\textwidth]{figures/hm/000000159311_synthesized_image-1.jpg} \\
   (a) Input & (b) DH~\cite{tsai2017deep}  & (c) Ours & (d) Input & (e) DH~\cite{tsai2017deep}  & (f) Ours \\
 \end{tabular}
-\caption{Examples of image harmonization results. For (a) and (d), the microwave and the zebra on the back have unusual color. Our method is able to adjust their appearance such that they look coherent and realistic. Our harmonization results are also more natural and plausible than state-of-the-art method~\cite{tsai2017deep}.}
+\caption{Examples of image harmonization results. For (a) and (d), the microwave and the zebra on the back have unusual color. Our method is able to adjust their appearance such that they look coherent and realistic. }
 \label{fig:harm}
 \vspace{-10pt}
 \end{figure}
@@ -259,10 +233,6 @@ The network jointly trained for inpainting and harmonization performs well in bo
   \includegraphics[width=.24\textwidth]{figures/guided/000000026204_mask.jpg}&
   \includegraphics[width=.24\textwidth]{figures/guided/000000026204_inpainting.jpg}&
   \includegraphics[width=.24\textwidth]{figures/guided/000000026204_inpainting_harmonization.jpg} \\
-  \includegraphics[width=.24\textwidth]{figures/guided/000000095843_input.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/guided/000000095843_mask.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/guided/000000095843_inpainting.jpg}&
-  \includegraphics[width=.24\textwidth]{figures/guided/000000095843_inpainting_harmonization.jpg} \\
   \includegraphics[width=.24\textwidth]{figures/guided/000000488251_input.jpg}&
   \includegraphics[width=.24\textwidth]{figures/guided/000000488251_mask.jpg}&
   \includegraphics[width=.24\textwidth]{figures/guided/000000488251_inpainting.jpg}&
@@ -271,6 +241,6 @@ The network jointly trained for inpainting and harmonization performs well in bo
 \end{tabular}
 \caption{Examples of interactive guided inpainting result. The segmentation mask is given by our foreground/background segmentation network trained on COCO. The final result combines the outputs of harmonization and inpainting.}
 \label{fig:guided}
-\vspace{-10pt}
+\vspace{-15pt}
 \end{figure}
 
