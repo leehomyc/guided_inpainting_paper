@@ -176,22 +176,22 @@ To more rigorously evaluate the performance, we conduct a user study based on th
 \vspace{-10pt}
 \end{figure}  
 
-\noindent\textbf{Effect of Adversarial Loss Annealing} We also investigate the effect of adversarial loss annealing and train another network without using ALA. Visually, we observe that using adversarial loss annealing reduces the noise level without sacrificing the overall sharpness and realism. We show two randomly selected examples in Fig.~\ref{fig:aal} to illustrate the effects. 
+\noindent\textbf{Effect of Adversarial Loss Annealing} We also investigate the effect of adversarial loss annealing and train another network without using ALA. Visually, we observe that using adversarial loss annealing reduces the noise level without sacrificing the overall sharpness and realism. We show two randomly selected examples in Fig.~\ref{fig:ala} to illustrate the effects. 
 
 \begin{figure}[h!]
 \centering
 \small
 \begin{tabular}{cccccc}
-\includegraphics[width=.16\textwidth]{figures/AAL/000000063154_input_image.jpg}&
-\includegraphics[width=.16\textwidth]{figures/AAL/000000063154_synthesized_image.jpg}&
-\includegraphics[width=.16\textwidth]{figures/AAL/000000063154_synthesized_image-1.jpg}&
-\includegraphics[width=.16\textwidth]{figures/AAL/000000475779_input_image.jpg}&
-\includegraphics[width=.16\textwidth]{figures/AAL/000000475779_synthesized_image.jpg}&
-\includegraphics[width=.16\textwidth]{figures/AAL/000000475779_synthesized_image-1.jpg}\\
-(a) Input & (b) w/o AAL & (c) AAL & (d) Input & (e) w/o AAL & (f) AAL \\
+\includegraphics[width=.16\textwidth]{figures/ALA/000000063154_input_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/ALA/000000063154_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/ALA/000000063154_synthesized_image-1.jpg}&
+\includegraphics[width=.16\textwidth]{figures/ALA/000000475779_input_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/ALA/000000475779_synthesized_image.jpg}&
+\includegraphics[width=.16\textwidth]{figures/ALA/000000475779_synthesized_image-1.jpg}\\
+(a) Input & (b) w/o ALA & (c) ALA & (d) Input & (e) w/o ALA & (f) ALA \\
 \end{tabular}
-\caption{Result comparison between training without AAL and with AAL.}
-\label{fig:aal}
+\caption{Result comparison between training without ALA and with ALA.}
+\label{fig:ala}
 \vspace{-15pt}
 \end{figure}  
 
