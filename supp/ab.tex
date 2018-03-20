@@ -1,0 +1,22 @@
+%!TEX root = supp.tex
+\section{More Experiments}
+\subsection{Comparing Patch Perceptual Losses with $\ell_2$} We compare the quality of inpainting that is trained with Patch Perceptual Loss and $\ell_2$ loss. $\ell_2$ is used to train CE and GLI, but it does not correspond well to human perception of similarity. We investigate how our Patch Perceptual Loss compares with $\ell_2$ loss by training under the same condition but using different reconstruction losses (PPL vs $\ell_2$). From the test cases, we see that our results are overwhelmingly better than $\ell_2$ results in terms of sharpness and coherence with context. Fig.~\ref{fig:ppl} shows two examples of comparison. 
+\begin{figure}[h!]	
+\centering	
+\small	
+\begin{tabular}{cccccc}	
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_input_image.jpg}&	
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.jpg}&	
+\includegraphics[width=.16\textwidth]{figures/loss/000000090208_synthesized_image.png}&	
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_input_image.jpg}&	
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.jpg}&	
+\includegraphics[width=.16\textwidth]{figures/loss/000000490171_synthesized_image.png}\\
+(a) Input & (b) $\ell_2$ & (c) Ours & (d) Input & (e) $\ell_2$ & (f) Ours\\	
+\end{tabular}	
+\caption{Effects of different types of reconstruction losses. Zoom in for best quality.}
+\label{fig:ppl}	
+\vspace{-5pt}	
+\end{figure}  
+
+\subsection{Data Acquisition for Jointly Training an Inpainting and Harmonization Network}
+To accomplish guided inpainting, we jointly train our inpainting and harmonization using the following data acquisition procedure: at each iteration given the input image $I$, we randomly select another image $I_g$ from the dataset. We then select and segment an object $I_o$ from $I$ based on the segmentation mask of COCO. We then transfer the color from $I_g$ to $I_o$, and paste $I_o$ onto $I_g$ at a random location. Finally, we crop a bounding box $I_b$ from $I_g$ that contains $I_o$, and paste $I_b$ back to $I$. The result, together with the foreground/background segmentation mask of $I_b$, is given to the network as input. The model is modified to output two images, one for inpainting result and the other for harmonization result. We use the original $I$ as the ground truth for both tasks. 
