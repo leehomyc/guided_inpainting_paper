@@ -4,7 +4,7 @@ Image inpainting is the task to fill in the missing part of an image with visual
 
 Traditional image inpainting methods mostly develop texture synthesis techniques to address the problem of hole-filling~\cite{bertalmio2000image,komodakis2006image,wexler2004space,barnes2009patchmatch,bertalmio2003simultaneous,wilczkowiak2005hole}. In~\cite{barnes2009patchmatch}, Barnes et al. proposes the Patch-Match algorithm which efficiently searches the most similar patch to reconstruct the missing regions. Wilczkowiak et al.~\cite{wilczkowiak2005hole} takes further steps and detects desirable search regions to find better match patches. However, these methods only exploit the low-level signal of the known contexts to hallucinate missing regions and fall short of understanding and predicting high-level semantics. Furthermore, it is often inadequate to capture the global structure of images by simply extending texture from surrounding regions. Another line of work in inpainting aims to fill in holes with contents from another guide image by using composition and harmonization~\cite{hays2007scene,tsai2017deep}. The guide is often retrieved from a large database based on similarity with the source image and is then combined with the source. Although these methods are able to propagate high-frequency details from the guide image, they often lead to inconsistent regions and gaps which are easily detectable with human eyes.  
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \setlength\tabcolsep{1pt}
 \begin{tabular}{cccccc}
@@ -16,10 +16,10 @@ Traditional image inpainting methods mostly develop texture synthesis techniques
   \includegraphics[width=.16\textwidth]{figures/teaser/ours.jpg} \\
   (a) Input  & (b) GLI~\cite{iizuka2017globally} & (c) Ours & (d) Input  & (e) DH~\cite{tsai2017deep} & (f) Ours  \\
 \end{tabular}
-\caption{An example of inpainting (top) and harmonzation (bottom) comparing with state-of-the-art methods. Zoom in for best viewing quality.}
+\caption{An example of inpainting (left) and harmonzation (right) comparing with state-of-the-art methods. Zoom in for best viewing quality.}
 \label{fig:teaser}
 \vspace{-15pt}
-\end{figure}
+\end{figure*}
 
 More recently, deep neural networks have shown excellent performance in various image completion tasks, such as texture synthesis and image completion. For inpainting, adversarial training becomes the de facto strategy to generate sharp details and natural looking results~\cite{pathak2016context,yeh2016semantic,li2017generative,yang2017high,iizuka2017globally}. Pathak et al.~\cite{pathak2016context} first proposes to train an encoder-decoder model for inpainting using both reconstruction loss and adversarial loss. In~\cite{yeh2016semantic}, Yeh et al. uses a pre-trained model to find the most similar encoding of a corrupted image and uses the found encoding to synthesize what is missing. In~\cite{yang2017high}, Yang et al. proposes a multi-scale approach and optimizes the hole contents such that neural feature extracted from a pre-trained CNN matches with features of the surrounding context. The optimization scheme improves the inpainting quality and resolution at the cost of computational efficiency. In~\cite{iizuka2017globally}, Iizuka et al. proposes a deep generative model trained with global and local adversarial losses, and can achieve good inpainting performance for mid-size images and holes. However, it requires extensive training (two months as described in the paper), and the results often contain excessive artifacts and noise patterns. Another limitation of ~\cite{yang2017high} and ~\cite{iizuka2017globally} is that they are unable to handle perceptual discontinuity, making it necessary to resort to post-processing (e.g. Poisson blending).
 

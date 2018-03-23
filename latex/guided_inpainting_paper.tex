@@ -1,37 +1,69 @@
 % last updated in April 2002 by Antje Endemann
 % Based on CVPR 07 and LNCS, with modifications by DAF, AZ and elle, 2008 and AA, 2010, and CC, 2011; TT, 2014; AAS, 2016
 
-\documentclass[runningheads]{llncs}
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb} % define this before the line numbering.
-\usepackage{ruler}
+%\usepackage{ruler}
 \usepackage{color}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{multirow}
 \usepackage{float}
 \usepackage{longtable}
-\usepackage[width=122mm,left=12mm,paperwidth=146mm,height=193mm,top=12mm,paperheight=217mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{epsfig}
+\usepackage{authblk}
+\usepackage[symbol*]{footmisc}
+
+
+\DefineFNsymbolsTM{otherfnsymbols}{%
+  \textexclamdown \wr
+  \textsection   \mathsection
+  \textdagger    \dagger
+  \textdaggerdbl \ddagger
+  \textasteriskcentered *
+  \textbardbl    \|%
+  \textparagraph \mathparagraph
+}%
+
+\setfnsymbol{otherfnsymbols}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\makeatletter
+\renewcommand\AB@affilsepx{, \protect\Affilfont}
+\makeatother
+\setlength{\affilsep}{0.05em}
+
+\cvprfinalcopy
+
+\ifcvprfinal\pagestyle{empty}\fi
 \begin{document}
-% \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
-% \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}}
-% \linenumbers
-\pagestyle{headings}
-\mainmatter
-\def\baselinestretch{0.97}
+
 \def\ECCV18SubNumber{1283}  % Insert your submission number here
 
 \title{Image Inpainting using Block-wise Procedural Training with Annealed Adversarial Counterpart} % Replace with your title
 
-\titlerunning{ECCV-18 submission ID \ECCV18SubNumber}
 
-\authorrunning{ECCV-18 submission ID \ECCV18SubNumber}
-
-\author{Anonymous ECCV submission}
-\institute{Paper ID \ECCV18SubNumber}
-
+\author[1]{Chao Yang}
+\author[1]{Yuhang Song}
+\author[2]{Xiaofeng Liu}
+\author[3]{Qingming Tang}
+\author[1]{C.-C. Jay Kuo}
+\affil[1]{USC}
+\affil[2]{Carnegie Mellon University}
+\affil[3]{Toyota Technological Institute at Chicago}
+\affil[ ]{\small \texttt{\{chaoy,yuhangso\}@usc.edu, iuxiaofeng@cmu.edu,  qmtang@ttic.edu, cckuo@sipi.usc.edu}}
 
 \maketitle
+%\blfootnote{* indicates equal contribution}
 
 \input{0_Abstract.tex}
 
@@ -45,8 +77,8 @@
 
 \input{5_Conclusions.tex}
 
-\clearpage
+%\clearpage
 
-\bibliographystyle{splncs}
+\bibliographystyle{ieee}
 \bibliography{egbib}
 \end{document}

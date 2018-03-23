@@ -1,20 +1,20 @@
 %!TEX root = guided_inpainting_paper.tex
 \section{Our Method}
 
-Our method consists of training a generator head as initialization and optimizing additional residual blocks as refinement. The generator head is trained for inpainting and is based on conditional GAN framework. Vanilla cGAN for image inpainting consists of a Generator $G$ and a Discriminator $D$. The generator learns to predict the hole contents and restore the complete image, while the discriminator learns to distinguish real images from generated images. Using the original image as ground truth, the model is trained in a self-supervised manner via the following minimax objective:
-\begin{eqnarray}
-\min\limits_G \max\limits_D E_{(s,x)}[\log D(s,x)] + E_s[\log (1-D(s,G(s)))].
-\end{eqnarray}
-Here $s$ and $x$ are the incomplete image as input and the original image as target. $G(s)$ is the output of the generator which could be the hole content or the complete image. In the case when $G(s)$ restores the complete image, only the contents inside the hole are kept to combine with the known regions of $s$.
-
-\begin{figure}[t]
+\begin{figure*}[ht!]
 \centering
 \small
 \includegraphics[width=1\textwidth]{figures/arch2.pdf}
 \caption{Generator head and the training losses. We only illustrate one scale of Patch Adversarial Loss and Patch Perceptual Loss. Note that to compute the Patch Adversarial Loss, we need to use the mask to find out which patch overlaps with the hole.}
 \label{fig:model}
 \vspace{-15pt}
-\end{figure}
+\end{figure*}
+
+Our method consists of training a generator head as initialization and optimizing additional residual blocks as refinement. The generator head is trained for inpainting and is based on conditional GAN framework. Vanilla cGAN for image inpainting consists of a Generator $G$ and a Discriminator $D$. The generator learns to predict the hole contents and restore the complete image, while the discriminator learns to distinguish real images from generated images. Using the original image as ground truth, the model is trained in a self-supervised manner via the following minimax objective:
+\begin{eqnarray}
+\min\limits_G \max\limits_D E_{(s,x)}[\log D(s,x)] + E_s[\log (1-D(s,G(s)))].
+\end{eqnarray}
+Here $s$ and $x$ are the incomplete image as input and the original image as target. $G(s)$ is the output of the generator which could be the hole content or the complete image. In the case when $G(s)$ restores the complete image, only the contents inside the hole are kept to combine with the known regions of $s$.
 
 \subsection{The Generator Head}
 \label{sec:resnet_head}
@@ -30,21 +30,19 @@ Different losses have been used to train an inpainting network. These losses can
 
 \begin{table}[h!]
 \begin{center}
-
-\resizebox{1\textwidth}{!}{%
+\resizebox{.5\textwidth}{!}{%
 {\tiny
   \begin{tabular}{ l  c  c }
     \hline
     \textbf{Method} & \textbf{Similarity Loss} &  \textbf{Realism Loss} \\ \hline
-    \emph{Context Encoder (CE)~\cite{pathak2016context}} & $\ell_2$ & Global Adversarial Loss\\ \hline
-    \emph{Global Local Inpainting (GLI)~\cite{iizuka2017globally}} & $\ell_2$ & Global and Local Adversarial Loss \\ \hline
-    \emph{Our Approach} & Patch Perceptual Loss (PPL) & Improved Multi-Scale Adversarial Loss \\ \hline
+    \emph{CE~\cite{pathak2016context}} & $\ell_2$ & Global Adversarial Loss\\ \hline
+    \emph{GLI~\cite{iizuka2017globally}} & $\ell_2$ & Global and Local Adversarial Loss \\ \hline
+    \emph{Ours} & Patch Perceptual Loss & Multi-Scale Patch Adversarial Loss \\ \hline
     \hline
   \end{tabular}}
   }
   \end{center}
   \caption{Comparison of training losses used in different methods.}
-  \vspace{-15pt}
   \label{table:losses}
 \end{table}
 
@@ -52,21 +50,25 @@ Different losses have been used to train an inpainting network. These losses can
 
 Based on this observation, we propose a new ``patch perceptual loss'' as the substitute of the $\ell_2$ losses. Traditional perceptual loss typically uses VGG-Net and computes the $\ell_2$ distance of the activations on a few feature layers. Recently,~\cite{zhang2018unreasonable} trained a specific perceptual network based on AlexNet to measure the perceptual differences between two image patches, making it an ideal candidate for our task. The perceptual network computes the activations and sums up the $\ell_2$ distances across all feature layers, each scaled by a learned weight. Furthermore, taking both the local view and the global view into account, we compute PPL at two scales. Local PPL considers the local hole patch, while the global PPL slightly zooms out to cover a larger contextual area. More formally, our PPL is defined as:
 \begin{eqnarray}
-\sum\limits_{p=1,2}PPL_k(G(s)_p, x_p) = \sum\limits_{k=1,2}\sum\limits_l\frac{1}{H_lW_l}\sum\limits_{h,w}\parallel w_l^T\odot(\hat{F}(x_p)^l_{hw}-\hat{F}(G(s)_p)^k_{hw})\parallel^2_2.
+&& \sum\limits_{p=p_1,p_2}PPL(G(s)_p, x_p) \\ \nonumber
+&&= \sum\limits_{p=p_1,p_2}\sum\limits_l\frac{1}{H_lW_l}\sum\limits_{h,w}\parallel w_l^T\odot(\hat{F}(x_p)^l_{hw}-\hat{F}(G(s)_p)^l_{hw})\parallel^2_2.
 \end{eqnarray}
 
 Here $p$ refers to the hole patch. $\hat{F}$ is the AlexNet and $l$ is the feature layer. $w_l$ is the layer-wise learned weight. Ablation study in Sec.~\ref{exp:study} shows that our patch perceptual loss gives better inpainting quality than traditional $\ell_2$. 
 
 \noindent\textbf{Multi-Scale Patch Adversarial Loss} Adversarial losses are given by trained discriminators to discern whether an image is real or fake. The global adversarial loss of~\cite{pathak2016context} takes the entire image as input and outputs a single real/fake prediction which does not consider local realism of holes. The additional local adversarial loss of~\cite{iizuka2017globally} adds another discriminator specifically for the hole, but it requires the hole to be fixed in shape and size during training to fit the local discriminator. To consider both the global view and the local view, and to be able to use multiple holes of arbitrary shape, we propose to use PatchGAN discriminators~\cite{isola2016image} at three scales of image resolutions. The discriminator at each scale is identical and only the input is a differently scaled version of the \textit{entire image}. Each discriminator is a fully convolutional PatchGAN and outputs a vector of real/fake predictions and each value corresponds to a local image patch. In this way, the discriminators are trained to classify global and local patches across the image at multiple scales, and it enables us to use multiple holes of arbitrary shapes since now the input is the entire image rather than the hole itself. However, since the output image is the composition of synthesized holes and known background, directly using PatchGAN is problematic because it does not differentiate between the hole patches (\textit{fake}) and the background patches (\textit{real}). To address this issue, when computing the PatchGAN loss, only the patches that overlap with the holes are labeled as fake. More formally, our Patch-wise Adversarial Loss is defined as: 
 \begin{eqnarray}
-\min\limits_G\max\limits_{D_1, D_2, D_3}&&\sum\limits_{k=1,2,3} L_{GAN}(G,D_k)  \\ = &&\sum\limits_{k=1,2,3}E_{(s_k,x_k)}[\log (s_k,x_k)] + E_{s_k}[\log (Q_k-D_k(s_k,G(s_k)))].
+&&\min\limits_G\max\limits_{D_1, D_2, D_3}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k)  \\ \nonumber
+&&=\sum\limits_{k=1,2,3}E_{(s_k,x_k)}[\log (s_k,x_k)] + E_{s_k}[\log (Q_k-D_k(s_k,G(s_k)))].
 \end{eqnarray}
 \label{eqn:adversarial_loss}
 Here $k$ refers to the image scale, and $Q_k$ is a patch-wise real/fake vector, based on whether the patch overlaps with the holes. Using multiple GAN discriminators at the same or different image scale has been proposed in unconditional GANs~\cite{durugkar2016generative} and conditional GANs~\cite{wang2017high}. Here we extend the design to take into account the holes, which is critical for obtaining semantically and locally coherent image completion results.
 
 To summarize, our full objective combines both losses is therefore defined as:
+
 \begin{eqnarray}
-\min\limits_G((\max\limits_{D_1, D_2, D_3}\lambda_{Adv}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k))+\lambda_{PPL}\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p)).
+\min\limits_G((\max\limits_{D_1, D_2, D_3}\lambda_{Adv}\sum\limits_{k=1,2,3} L_{GAN}(G,D_k)) \\ \nonumber
++\lambda_{PPL}\sum\limits_{k=1,2}PPL_k(G(s)_p, x_p)).
 \end{eqnarray}
 
 We use $\lambda_{Adv}$ and $\lambda_{PPL}$ to control the importance of the two terms. In our experiment, we set initial $\lambda_{Adv}=1$ and $\lambda_{PPL}=10$ as used in~\cite{pathak2016context,wang2017high}. As training progresses, we gradually decrease the weight of $\lambda_{Adv}$ based on adversarial loss annealing (Sec.~\ref{sec:procedural}).
@@ -80,13 +82,13 @@ Our experiments show that using the described generator head and training losses
 \begin{figure}[t]
 \centering
 \small
-\includegraphics[width=1\textwidth]{figures/proc.pdf}
+\includegraphics[width=.45\textwidth]{figures/proc.pdf}
 \caption{Illustration of block-wise procedural training. The yellow residual blocks refer to the generator head which is trained first. The green residual blocks are progressively added one at a time. We also draw the skip connections between the already trained residual blocks and the up-sampling back end.}
-\label{fig:proc}
-\vspace{-20pt}
+\label{fig:procedural}
+
 \end{figure}
 
-To address the challenge of training a deeper network, we propose to use procedural block-wise training to gradually increase the depth of the inpainting network. More specifically, we begin by training the generator head until it converges. Then, we add a new residual block after the already trained residual blocks, right before the back-end up-sampling layers. In order to smoothly introduce the new residual block without breaking the trained model, we add another skip path from the already trained residual blocks to the up-sampling layers. Initially, the weight of the skip path is set to 1, while the weight of the path containing the new block is set to 0. This essentially makes the initial network identical to the already trained network. We then slowly decrease the weight of the skip path and increase the weight of the new residual block as training progresses. In this way, the newly introduced residual block is trained to be a fine-tuning component, which adds another layer of fine details to the original results. This step are repeated multiple times, and each time we deepen the network by adding a new residual block. In our experiments, we found that the results improve significantly over generator head, after training with the first residual block added. The output becomes stabilized after three residual blocks, and very little changes can be detected if more residual blocks are brought in. We illustrate the procedural training process in Fig.~\ref{fig:proc}.
+To address the challenge of training a deeper network, we propose to use procedural block-wise training to gradually increase the depth of the inpainting network. More specifically, we begin by training the generator head until it converges. Then, we add a new residual block after the already trained residual blocks, right before the back-end up-sampling layers. In order to smoothly introduce the new residual block without breaking the trained model, we add another skip path from the already trained residual blocks to the up-sampling layers. Initially, the weight of the skip path is set to 1, while the weight of the path containing the new block is set to 0. This essentially makes the initial network identical to the already trained network. We then slowly decrease the weight of the skip path and increase the weight of the new residual block as training progresses. In this way, the newly introduced residual block is trained to be a fine-tuning component, which adds another layer of fine details to the original results. This step are repeated multiple times, and each time we deepen the network by adding a new residual block. In our experiments, we found that the results improve significantly over generator head, after training with the first residual block added. The output becomes stabilized after three residual blocks, and very little changes can be detected if more residual blocks are brought in. We illustrate the procedural training process in Fig.~\ref{fig:procedural}.
 
 The block-wise procedural training has several benefits. First, it guides the training process of a very deep generator. Starting with the generator head and gradually fine-tuning with more residual blocks makes it easier to discover the mapping between the incomplete image and the complete image, even though the search space is huge given the diversity of natural images and the randomness of holes. Another benefit is training efficiency, as we found decoupling the training of the generator head and the fine-tuning of additional residual blocks requires significantly less training time comparing with training the network all at once. Similar idea of progressive training has been used in Progressive GAN~\cite{karras2017progressive}. However the task and the model are different in our case.
 
